@@ -1,0 +1,26 @@
+/* Simple portal styles */
+:root{
+  --bg:#0f1720;
+  --card:#0b1220;
+  --muted:#9aa4b2;
+  --accent:#6ee7b7;
+  --glass: rgba(255,255,255,0.03);
+}
+body{font-family:Inter,Segoe UI,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#071025 0%,#091827 100%);color:#e6eef6;margin:0;padding:0}
+.container{max-width:980px;margin:24px auto;padding:0 20px}
+.hero{padding:36px 0 10px}
+.hero h1{margin:0;font-size:28px}
+.lead{color:var(--muted);margin-top:6px}
+.muted{color:var(--muted);font-size:13px}
+.featured{margin-top:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{background:var(--glass);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+.card h3{margin:0 0 8px 0}
+.card p{margin:0 0 8px 0;color:#cfe6ff}
+.meta img{height:20px}
+.groups{margin-top:28px}
+.group{margin-bottom:18px}
+.group h3{margin-bottom:8px}
+.group ul{margin:0;padding-left:18px;color:var(--muted)}
+.notes{margin-top:28px;color:var(--muted)}
+footer.notes a{color:var(--accent)}
