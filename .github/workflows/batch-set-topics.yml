@@ -1,0 +1,94 @@
+name: Batch set repo topics
+
+on:
+  workflow_dispatch:
+
+jobs:
+  set-topics:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set repo topics
+        env:
+          GH_TOKEN: ${{ secrets.TOPICS_PAT }}
+        run: |
+          set -euo pipefail
+
+          repos=(
+            "AstrLink"
+            "DataForge.Core"
+            "Feishu.Context"
+            "GmailChanger"
+            "IChing"
+            "Jvedio"
+            "MediaManager"
+            "MegaRepo"
+            "microGameRepository"
+            "muhan"
+            "nanjing-rail-typing"
+            "NetStrata"
+            "PITS-Personal-Itinerary-Tracking-System"
+            "ReportPlatform"
+            "switchcheck"
+            "Vedio"
+            "VeniceConsole"
+            "vibe-hub"
+            "VoiceTodo"
+            "worldforge-creative-studio"
+            "yf.pt"
+          )
+
+          declare -A topics
+          topics[AstrLink]="ai agent gateway local-ai llm"
+          topics[DataForge.Core]="dotnet csharp data pipeline import-export"
+          topics[Feishu.Context]="dotnet csharp feishu workflow automation"
+          topics[GmailChanger]="javascript browser-extension gmail productivity"
+          topics[IChing]="csharp dotnet chinese-culture algorithm divination"
+          topics[Jvedio]="media video local-library metadata media-management"
+          topics[MediaManager]="media video multimedia library desktop"
+          topics[MegaRepo]="repo-maintenance docs archive recovery"
+          topics[microGameRepository]="game demo webgame collection"
+          topics[muhan]="csharp dotnet customization app"
+          topics[nanjing-rail-typing]="javascript typing-game game frontend"
+          topics[NetStrata]="dotnet csharp networking monitoring diagnostics"
+          topics[PITS-Personal-Itinerary-Tracking-System]="dotnet csharp travel itinerary productivity"
+          topics[ReportPlatform]="dotnet csharp reporting healthcare dashboards"
+          topics[switchcheck]="cli devops environment healthcheck tooling"
+          topics[Vedio]="dotnet csharp media video webview"
+          topics[VeniceConsole]="dotnet csharp ai prompt-testing console"
+          topics[vibe-hub]="dotnet csharp ai-agent desktop workflow"
+          topics[VoiceTodo]="dotnet csharp voice productivity maui"
+          topics[worldforge-creative-studio]="dotnet csharp ai writing creativity"
+          topics[yf.pt]="dotnet csharp dashboard monitoring information-flow"
+
+          for repo in "${repos[@]}"; do
+            echo "Processing $repo"
+            IFS=' ' read -r -a arr <<< "${topics[$repo]}"
+            json='['
+            first=true
+            for t in "${arr[@]}"; do
+              if [ "$first" = true ]; then
+                json+="\"$t\""
+                first=false
+              else
+                json+=",\"$t\""
+              fi
+            done
+            json+=']'
+
+            echo "Setting topics: $json"
+
+            curl -s -S -X PUT \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              https://api.github.com/repos/kongliuli/$repo/topics \
+              -d "{\"names\": $json}"
+
+            echo "Done $repo"
+          done
+
+          echo "All repository topics updated."
